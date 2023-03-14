@@ -97,33 +97,14 @@ public class HibernateDAO {
         transaction.commit();
         session.close();
     }
-    public void modifierObjetNonNull(Object objetAModifier) {
-        EntityManager entityManager = getSessionFactory().createEntityManager(); // Récupérer l'EntityManager
-        EntityTransaction transaction = entityManager.getTransaction(); // Commencer une transaction
-        transaction.begin();
-        try {
-            Object objetExistant = entityManager.find(objetAModifier.getClass(), objetAModifier.getId()); // Récupérer l'objet existant dans la base de données
-            if (objetExistant != null) {
-                BeanUtils.copyProperties(objetAModifier, objetExistant, getNullPropertyNames(objetAModifier)); // Copier les propriétés non nulles de l'objet à modifier dans l'objet existant
-                entityManager.merge(objetExistant); // Enregistrer les modifications dans la base de données
-            }
-            transaction.commit(); // Valider la transaction
-        } catch (Exception e) {
-            transaction.rollback(); // Annuler la transaction en cas d'erreur
-            throw new RuntimeException(e);
-        } finally {
-            entityManager.close(); // Fermer l'EntityManager
-        }
+    public <T> T update(T entity) {
+        Session session = this.sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.saveOrUpdate(entity);
+        transaction.commit();
+        session.close();
+        return entity;
     }
-
-    private String[] getNullPropertyNames(Object objet) {
-        final BeanWrapper wrappedObject = new BeanWrapperImpl(objet);
-        return Arrays.stream(wrappedObject.getPropertyDescriptors())
-                .map(PropertyDescriptor::getName)
-                .filter(propertyName -> wrappedObject.getPropertyValue(propertyName) == null)
-                .toArray(String[]::new);
-    }
-
     public SessionFactory getSessionFactory() {
         return this.sessionFactory;
     }
