@@ -14,6 +14,7 @@ public class InsertionPersonnageControleur {
     @RequestMapping("/insertion")
     public String index(Model model){
         model.addAttribute("listePerso", dao.findAll(Personnage.class));
+        model.addAttribute("last", dao.getLastId(Personnage.class));
         return "insertionPerso";
     }
 

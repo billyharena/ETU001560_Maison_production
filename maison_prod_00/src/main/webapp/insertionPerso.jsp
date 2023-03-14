@@ -9,6 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     List<Personnage> lpers =(List<Personnage>) request.getAttribute("listePerso");
+    Integer id = (Integer) request.getAttribute("last");
 %>
 <html>
 <head>
@@ -22,5 +23,6 @@
     <option value="<%= pers.getId() %>"><%= pers.getPersonnage() %></option>
     <%   } %>
 </select>
+<h2><%=id%></h2>
 </body>
 </html>

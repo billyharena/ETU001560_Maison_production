@@ -105,6 +105,20 @@ public class HibernateDAO {
         session.close();
         return entity;
     }
+    /*public <T> Integer getLastId(Class<T> clazz) {
+        Session session = this.sessionFactory.openSession();
+        String query = "select max(id) from " + clazz.getName();
+        Integer lastId = (Integer) session.createQuery(query).uniqueResult();
+        session.close();
+        return lastId != null ? lastId : 0;
+    }*/
+    public <T> Serializable getLastId(Class<T> clazz) {
+        Session session = this.sessionFactory.openSession();
+        Serializable lastId = (Serializable) session.createQuery("select max(id) from " + clazz.getName()).uniqueResult();
+        session.close();
+        return lastId;
+    }
+
     public SessionFactory getSessionFactory() {
         return this.sessionFactory;
     }
@@ -113,7 +127,4 @@ public class HibernateDAO {
         this.sessionFactory = sessionFactory;
     }
 
-    public static void main(String[] args) {
-        Personnage p = new Personnage();
-    }
 }
